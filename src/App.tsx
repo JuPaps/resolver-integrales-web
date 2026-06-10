@@ -260,7 +260,7 @@ export default function App() {
 
         {result?.success && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ background: isUsingAI ? 'linear-gradient(135deg, rgba(168,85,247,0.12), rgba(236,72,153,0.12))' : 'linear-gradient(135deg, rgba(14,165,233,0.12), rgba(16,185,129,0.12))', border: `1px solid ${isUsingAI ? 'rgba(168,85,247,0.3)' : 'rgba(14,165,233,0.3)'}`, borderRadius: 16, padding: 24 }}>
+            <div style={{ background: isUsingAI ? 'linear-gradient(135deg, rgba(168,85,247,0.12), rgba(236,72,153,0.12))' : 'linear-gradient(135deg, rgba(80,189,164,0.12), rgba(255,208,0,0.12))', border: `1px solid ${isUsingAI ? 'rgba(168,85,247,0.3)' : 'rgba(80,189,164,0.3)'}`, borderRadius: 16, padding: 24 }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: isUsingAI ? '#d946ef' : v('color-primary'), marginBottom: 12 }}>RESPUESTA FINAL</div>
               <div style={{ fontSize: 20, color: v('color-text'), overflowX: 'auto', paddingBottom: 8 }}>
                 <KatexInline latex={`F(x) = ${result.solution_latex}`} />
@@ -320,7 +320,7 @@ export default function App() {
                     )}
                     
                     <Line type="monotone" dataKey="fx" name="f(x)" stroke={v('color-primary')} dot={false} strokeWidth={3} isAnimationActive={false} />
-                    <Line type="monotone" dataKey="Fx" name="F(x)" stroke="#10b981" dot={false} strokeWidth={3} isAnimationActive={false} />
+                    <Line type="monotone" dataKey="Fx" name="F(x)" stroke={v('color-accent')} dot={false} strokeWidth={3} isAnimationActive={false} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
