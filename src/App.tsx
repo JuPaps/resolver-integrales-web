@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, ComposedChart, Area } from 'recharts';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, ComposedChart, Area } from 'recharts';
 import { solveIntegral, toLatex } from './mathEngine';
-import type { SolveResult } from './mathEngine';
+
 import { solveIntegralWithAI } from './aiEngine';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
@@ -43,29 +43,7 @@ const keys = [
   ['C', '0', '.', '+'],
 ];
 
-const keyType = (k: string): 'fn' | 'action' | 'clear' | 'num' => {
-  if (k === 'C') return 'clear';
-  if (['sin(', 'cos(', 'tan(', 'ln(', 'sqrt(', 'pi'].includes(k)) return 'fn';
-  if (['+', '-', '*', '/', '^', '(', ')'].includes(k.at(-1) ?? '')) return 'action';
-  return 'num';
-};
-
-// ─── Chart tooltip ───────────────────────────────────────────────────────────
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 8, padding: '8px 12px', fontSize: 13 }}>
-        <p style={{ margin: 0, color: 'var(--color-text-muted)' }}>x = {Number(label).toFixed(2)}</p>
-        {payload.map((p: any) => (
-          <p key={p.name} style={{ margin: '2px 0', color: p.color, fontWeight: 600 }}>
-            {p.name}: {Number(p.value).toFixed(4)}
-          </p>
-        ))}
-      </div>
-    );
-  }
-  return null;
-};
+// ─── Constants ─────────────────────────────────────────────────────────────────
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
@@ -351,13 +329,13 @@ export default function App() {
             {/* Tips & Warnings */}
             {(result.tips?.length || result.warnings?.length) ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {result.tips?.map((tip, i) => (
+                {result.tips?.map((tip: string, i: number) => (
                   <div key={`tip-${i}`} style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 10, padding: '12px 16px', display: 'flex', gap: 10 }}>
                     <span>💡</span>
                     <span style={{ color: v('color-text'), fontSize: 14 }}>{tip}</span>
                   </div>
                 ))}
-                {result.warnings?.map((w, i) => (
+                {result.warnings?.map((w: string, i: number) => (
                   <div key={`warn-${i}`} style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 10, padding: '12px 16px', display: 'flex', gap: 10 }}>
                     <span>⚠️</span>
                     <span style={{ color: v('color-text'), fontSize: 14, fontWeight: isUsingAI && i===0 ? 'bold' : 'normal' }}>{w}</span>

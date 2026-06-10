@@ -61,18 +61,18 @@ export function toLatex(s: string): string {
 }
 
 // Pretty fraction
-function frac(num: number, den: number): string {
-  if (den === 1) return String(num);
-  if (num < 0 && den < 0) return `${-num}/${-den}`;
-  return `(${num}/${den})`;
-}
+// function frac(num: number, den: number): string {
+//   if (den === 1) return String(num);
+//   if (num < 0 && den < 0) return `${-num}/${-den}`;
+//   return `(${num}/${den})`;
+// }
 
-function coeffStr(c: number): string {
-  if (c === 1) return '';
-  if (c === -1) return '-';
-  if (Number.isInteger(c)) return String(c) + '*';
-  return c.toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '*';
-}
+// function coeffStr(c: number): string {
+//   if (c === 1) return '';
+//   if (c === -1) return '-';
+//   if (Number.isInteger(c)) return String(c) + '*';
+//   return c.toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '*';
+// }
 
 // ─── Safe numeric evaluator ──────────────────────────────────────────────────
 function safeEval(expr: string, xVal: number): number {
