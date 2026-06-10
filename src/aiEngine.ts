@@ -146,9 +146,19 @@ export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?:
     return parsedResult;
 
   } catch (err: any) {
+    const msg = String(err.message || '');
+    if (msg.includes('401') || msg.includes('403') || msg.includes('API_KEY_INVALID')) {
+      return { success: false, error: 'La API Key proporcionada no es válida o fue rechazada. Por favor, verifica tu configuración 🔑.' };
+    }
+    if (msg.includes('503') || msg.includes('429') || msg.includes('500') || msg.includes('Failed to fetch') || msg.includes('Network request failed')) {
+      return { success: false, error: 'En este momento nuestra Red Neuronal se encuentra saturada 🚧.\\nPor favor, intenta de nuevo en unos minutos.' };
+    }
+    if (msg.includes('404')) {
+      return { success: false, error: 'El modelo seleccionado no está disponible actualmente. Selecciona otro en la configuración.' };
+    }
     return {
       success: false,
-      error: `Error al contactar a la IA: ${err.message || 'Desconocido'}`
+      error: 'Ocurrió un error inesperado al contactar con la Red Neuronal.\\nPor favor, intenta de nuevo más tarde.'
     };
   }
 }
