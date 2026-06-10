@@ -1,34 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #50bda4; /* Medium Seagreen */
-  --color-primary-dark: #3a9781;
-  --color-accent: #ffb800; /* Deep Canary */
-  --color-accent-pastel: #ffe066; /* Pastel Canary */
-  --color-orange: #ff8c00;
+  --color-primary: #38bdf8; /* Azul Claro */
+  --color-primary-dark: #0284c7;
+  --color-accent: #a855f7; /* Morado */
+  --color-accent-pastel: #d8b4fe;
+  --color-orange: #ef4444; /* Rojo */
   
-  --grad-button: linear-gradient(135deg, #50bda4 0%, #ffb800 65%, #ff8c00 100%);
-  --grad-panel: linear-gradient(135deg, rgba(80,189,164,0.08) 0%, rgba(255,184,0,0.12) 65%, rgba(255,140,0,0.15) 100%);
+  /* Degradado: Azul -> Morado -> Rojo */
+  --grad-button: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #f43f5e 100%);
+  --grad-panel: linear-gradient(135deg, rgba(56,189,248,0.1) 0%, rgba(168,85,247,0.1) 50%, rgba(244,63,94,0.1) 100%);
 
-  --color-bg: #0e1715; 
-  --color-surface: #15221f;
-  --color-surface-2: #1e302c;
-  --color-border: #28443d;
-  --color-text: #f0fdf8;
-  --color-text-muted: #95b3aa;
-  --color-error: #f87171;
-  --color-warning: #ffd000; /* Bright Canary */
+  --color-bg: #000000; /* Negro puro */
+  --color-surface: #0f172a;
+  --color-surface-2: #1e293b;
+  --color-border: #334155;
+  --color-text: #ffffff; /* Blanco puro */
+  --color-text-muted: #94a3b8;
+  --color-error: #ef4444; /* Rojo */
+  --color-warning: #f43f5e; /* Rojo/Rosa */
 }
 
 .light {
-  --color-bg: #f5fbfa;
-  --color-surface: #ffffff;
-  --color-surface-2: #e4f3ef;
-  --color-border: #c7e1db;
-  --color-text: #132420;
-  --color-text-muted: #53776d;
+  --color-bg: #f8fafc; /* Blancos rotos */
+  --color-surface: #ffffff; /* Blanco puro */
+  --color-surface-2: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-text: #000000; /* Negro puro */
+  --color-text-muted: #475569;
   
-  --grad-panel: linear-gradient(135deg, rgba(80,189,164,0.15) 0%, rgba(255,184,0,0.2) 65%, rgba(255,140,0,0.25) 100%);
+  --grad-panel: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(168,85,247,0.15) 50%, rgba(244,63,94,0.15) 100%);
 }
 
 * { box-sizing: border-box; }
