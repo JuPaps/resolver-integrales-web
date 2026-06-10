@@ -58,10 +58,10 @@ export default function App() {
   const [xDomain, setXDomain] = useState<[number, number]>([-10, 10]);
   
   // AI State
-  const [apiKey, setApiKey] = useState('');
-  const [aiProvider, setAiProvider] = useState<'gemini' | 'openai'>('gemini');
-  const [aiModel, setAiModel] = useState('gemini-1.5-pro-latest');
-  const [aiBaseUrl, setAiBaseUrl] = useState('');
+  const [apiKey, setApiKey] = useState('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');
+  const [aiProvider, setAiProvider] = useState<'gemini' | 'openai'>('openai');
+  const [aiModel, setAiModel] = useState('llama-3.3-70b-versatile');
+  const [aiBaseUrl, setAiBaseUrl] = useState('https://api.groq.com/openai/v1');
   
   const [showApiModal, setShowApiModal] = useState(false);
   const [isUsingAI, setIsUsingAI] = useState(false);
