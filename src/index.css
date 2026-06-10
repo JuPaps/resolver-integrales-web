@@ -4,6 +4,12 @@
   --color-primary: #50bda4; /* Medium Seagreen */
   --color-primary-dark: #3a9781;
   --color-accent: #ffb800; /* Deep Canary */
+  --color-accent-pastel: #ffe066; /* Pastel Canary */
+  --color-orange: #ff8c00;
+  
+  --grad-button: linear-gradient(135deg, #50bda4 0%, #ffb800 65%, #ff8c00 100%);
+  --grad-panel: linear-gradient(135deg, rgba(80,189,164,0.08) 0%, rgba(255,184,0,0.12) 65%, rgba(255,140,0,0.15) 100%);
+
   --color-bg: #0e1715; 
   --color-surface: #15221f;
   --color-surface-2: #1e302c;
@@ -21,6 +27,8 @@
   --color-border: #c7e1db;
   --color-text: #132420;
   --color-text-muted: #53776d;
+  
+  --grad-panel: linear-gradient(135deg, rgba(80,189,164,0.15) 0%, rgba(255,184,0,0.2) 65%, rgba(255,140,0,0.25) 100%);
 }
 
 * { box-sizing: border-box; }

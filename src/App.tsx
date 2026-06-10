@@ -225,7 +225,7 @@ export default function App() {
             <button onClick={handleSolveLocal} disabled={!expr.trim() || loading} style={{ flex: 1, minWidth: 140, padding: '12px 20px', borderRadius: 10, border: 'none', background: v('color-surface-2'), color: v('color-text'), borderBottom: `2px solid ${v('color-primary')}`, fontWeight: 600, fontSize: 15, cursor: 'pointer', opacity: (!expr.trim() || loading) ? 0.6 : 1 }}>
               = Resolver Normal
             </button>
-            <button onClick={handleSolveAI} disabled={!expr.trim() || loading} style={{ flex: 1, minWidth: 160, padding: '12px 20px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff', fontWeight: 700, fontSize: 15, cursor: 'pointer', opacity: (!expr.trim() || loading) ? 0.6 : 1 }}>
+            <button onClick={handleSolveAI} disabled={!expr.trim() || loading} style={{ flex: 1, minWidth: 160, padding: '12px 20px', borderRadius: 10, border: 'none', background: v('grad-button'), color: '#fff', fontWeight: 700, fontSize: 15, cursor: 'pointer', opacity: (!expr.trim() || loading) ? 0.6 : 1, textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
               ✨ Red Neuronal Avanzada
             </button>
           </div>
@@ -260,15 +260,15 @@ export default function App() {
 
         {result?.success && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ background: isUsingAI ? 'linear-gradient(135deg, rgba(168,85,247,0.12), rgba(236,72,153,0.12))' : 'linear-gradient(135deg, rgba(80,189,164,0.12), rgba(255,208,0,0.12))', border: `1px solid ${isUsingAI ? 'rgba(168,85,247,0.3)' : 'rgba(80,189,164,0.3)'}`, borderRadius: 16, padding: 24 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: isUsingAI ? '#d946ef' : v('color-primary'), marginBottom: 12 }}>RESPUESTA FINAL</div>
+            <div style={{ background: v('grad-panel'), border: `1px solid ${isUsingAI ? v('color-accent') : v('color-primary')}`, borderRadius: 16, padding: 24, boxShadow: '0 8px 32px rgba(0,0,0,0.05)' }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: isUsingAI ? v('color-accent') : v('color-primary'), marginBottom: 12 }}>RESPUESTA FINAL</div>
               <div style={{ fontSize: 20, color: v('color-text'), overflowX: 'auto', paddingBottom: 8 }}>
                 <KatexInline latex={`F(x) = ${result.solution_latex}`} />
               </div>
               {result.definite_value !== undefined && (
                 <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${v('color-border')}` }}>
                   <div style={{ fontSize: 12, color: v('color-text-muted'), marginBottom: 8 }}>EVALUACIÓN DEFINIDA</div>
-                  <div style={{ fontSize: 24, fontWeight: 'bold', color: isUsingAI ? '#d946ef' : v('color-primary') }}>
+                  <div style={{ fontSize: 24, fontWeight: 'bold', color: isUsingAI ? v('color-accent') : v('color-primary') }}>
                     <KatexInline latex={`= ${result.definite_latex}`} />
                   </div>
                 </div>
