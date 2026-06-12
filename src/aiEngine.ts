@@ -1,6 +1,9 @@
 import { type SolveResult, generatePlot } from './mathEngine';
 
-const SYSTEM_PROMPT = `Eres el motor de cálculo matemático de "MathSolver". El usuario te enviará una integral o expresión matemática para resolver.
+// ─── PROMPT PRINCIPAL DE LA IA ────────────────────────────────────────────────
+// Instrucciones estrictas para la Red Neuronal Avanzada.
+// Se le pide devolver exclusivamente un formato JSON válido con la solución, 
+// pasos matemáticos y representaciones compatibles para Javascript (para las gráficas).
 Debes resolverla paso a paso utilizando métodos de cálculo universitario (sustitución, por partes, fracciones parciales, trigonométricas, etc.).
 Debes devolver ÚNICAMENTE un objeto JSON válido (sin formato markdown adicional ni bloques de código de texto plano, SOLO el JSON parseable).
 El JSON debe cumplir con esta estructura estricta:
@@ -34,16 +37,21 @@ REGLAS IMPORTANTES PARA EL JSON:
 3. Asegúrate de que las matemáticas sean correctas y estén simplificadas.
 4. Si la expresión no es una integral válida o es basura de texto, devuelve {"success": false, "error": "Explicación del error matemático"}.`;
 
+// ─── CONFIGURACIÓN DE LA IA ───────────────────────────────────────────────────
+// Define los proveedores soportados (Gemini o compatibles con OpenAI como Groq).
 export type AIProvider = 'gemini' | 'openai';
 
+// Interfaz para la configuración de la Red Neuronal (modelo, API Key y Endpoint).
 export interface AIConfig {
   provider: AIProvider;
   model: string;
   apiKey: string;
-  baseUrl?: string; // Para OpenAI compatibles (Groq, LMStudio, etc)
+  baseUrl?: string; // Ruta personalizada para proveedores compatibles con OpenAI
 }
 
-export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?: string, bStr?: string): Promise<SolveResult> {
+// ─── FUNCIÓN PRINCIPAL DE RESOLUCIÓN CON IA ───────────────────────────────────
+// Toma la expresión matemática del usuario y los límites (si es definida),
+// se comunica con la API de la Red Neuronal, y formatea la respuesta.
   if (!config.apiKey) {
     return { success: false, error: 'No se configuró una API Key.' };
   }
@@ -54,12 +62,13 @@ export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?:
   try {
     let candidateText = '';
 
+    // Preparar el mensaje del usuario adaptado si es una integral definida o indefinida.
     const userMessage = aStr && bStr 
       ? `Resuelve esta integral DEFINIDA desde a=${aStr} hasta b=${bStr} de la función: ${expr}. Devuelve SOLO el JSON estricto e incluye definite_value y definite_latex calculando F(${bStr}) - F(${aStr}).`
       : `Resuelve esta integral indefinida de forma detallada: ${expr}. Devuelve SOLO el JSON estricto.`;
 
     if (config.provider === 'gemini') {
-      // Gemini API (Google AI Studio)
+      // ─── PROVEEDOR: GEMINI (GOOGLE) ───────────────────────────────────────────
       const cleanModel = config.model.replace('models/', '');
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${config.apiKey}`;
 
@@ -84,7 +93,7 @@ export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?:
       candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     } else if (config.provider === 'openai') {
-      // OpenAI API o Compatible (Groq, DeepSeek, Local, etc)
+      // ─── PROVEEDOR: COMPATIBLE CON OPENAI (GROQ, LOCAL, ETC) ────────────────
       const endpoint = config.baseUrl ? config.baseUrl.replace(/\/$/, '') + '/chat/completions' : 'https://api.openai.com/v1/chat/completions';
       
       const body = {
@@ -119,7 +128,8 @@ export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?:
        throw new Error('La IA no devolvió contenido de texto útil.');
     }
 
-    // Parse the JSON
+    // ─── PARSEO Y FORMATEO DEL JSON ───────────────────────────────────────────
+    // Extraer y convertir el texto recibido de la IA en un objeto Javascript.
     let parsedResult: SolveResult;
     try {
       parsedResult = JSON.parse(candidateText);
@@ -132,11 +142,11 @@ export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?:
       }
     }
 
-    // Add a mandatory warning to indicate this was AI generated
+    // Añadir una advertencia al resultado indicando que fue calculado por IA.
     parsedResult.warnings = parsedResult.warnings || [];
     parsedResult.warnings.unshift(`🤖 Generado por Red Neuronal Avanzada. Verifica el resultado matemático.`);
     
-    // Generate Plot Data from the AI's math JS syntax
+    // Generar datos para la gráfica usando las fórmulas crudas devueltas por la IA.
     if ((parsedResult as any).integrand_math && (parsedResult as any).solution_math) {
       parsedResult.plotData = generatePlot((parsedResult as any).integrand_math, (parsedResult as any).solution_math, aStr, bStr);
     } else {
@@ -146,6 +156,8 @@ export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?:
     return parsedResult;
 
   } catch (err: any) {
+    // ─── MANEJO DE ERRORES AMIGABLES ──────────────────────────────────────────
+    // Interceptar errores de la API (saturación, llave incorrecta) y mostrar un texto entendible.
     const msg = String(err.message || '');
     if (msg.includes('401') || msg.includes('403') || msg.includes('API_KEY_INVALID')) {
       return { success: false, error: 'La API Key proporcionada no es válida o fue rechazada. Por favor, verifica tu configuración 🔑.' };

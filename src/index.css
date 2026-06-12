@@ -43,7 +43,7 @@ body {
   min-height: 100vh;
 }
 
-/* Scrollbar */
+/* Barra de Desplazamiento */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-surface); }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }

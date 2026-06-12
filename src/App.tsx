@@ -6,7 +6,7 @@ import { solveIntegralWithAI } from './aiEngine';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
-// ─── KaTeX helper ────────────────────────────────────────────────────────────
+// ─── COMPONENTES KATEX (Para renderizar matemáticas hermosas) ─────────────────
 
 function KatexBlock({ latex }: { latex: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -32,7 +32,7 @@ function KatexInline({ latex }: { latex: string }) {
   return <span ref={ref} />;
 }
 
-// ─── Theme ───────────────────────────────────────────────────────────────────
+// ─── TECLADO MATEMÁTICO EN PANTALLA ───────────────────────────────────────────
 const keys = [
   ['sin(', 'cos(', 'tan(', 'ln('],
   ['x^2', 'x^3', 'x^', 'sqrt('],
@@ -43,9 +43,9 @@ const keys = [
   ['C', '0', '.', '+'],
 ];
 
-// ─── Constants ─────────────────────────────────────────────────────────────────
+// ─── CONSTANTES GLOBALES ──────────────────────────────────────────────────────
 
-// ─── Main App ─────────────────────────────────────────────────────────────────
+// ─── COMPONENTE PRINCIPAL DE LA APLICACIÓN ────────────────────────────────────
 export default function App() {
   const [dark, setDark] = useState(true);
   const [expr, setExpr] = useState('');
@@ -57,7 +57,7 @@ export default function App() {
   const [openStep, setOpenStep] = useState<number | null>(null);
   const [xDomain, setXDomain] = useState<[number, number]>([-10, 10]);
   
-  // AI State
+  // Estado de la Red Neuronal Avanzada
   const [apiKey, setApiKey] = useState('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');
   const [aiProvider, setAiProvider] = useState<'gemini' | 'openai'>('openai');
   const [aiModel, setAiModel] = useState('llama-3.3-70b-versatile');
@@ -245,7 +245,7 @@ export default function App() {
           )}
         </div>
 
-        {/* Error */}
+        {/* Renderizado de Mensajes de Error */}
         {result?.success === false && (
           <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid #ef4444', borderRadius: 16, padding: 24, marginTop: 16 }}>
             <div style={{ color: '#ef4444', fontWeight: 'bold', marginBottom: 8 }}>❌ Error matemático</div>
@@ -326,7 +326,7 @@ export default function App() {
               </div>
             )}
 
-            {/* Tips & Warnings */}
+            {/* Consejos Adicionales y Advertencias Matemáticas */}
             {(result.tips?.length || result.warnings?.length) ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.tips?.map((tip: string, i: number) => (

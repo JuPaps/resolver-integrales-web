@@ -33,7 +33,7 @@ export interface SolveResult {
   definite_latex?: string;
 }
 
-// ─── LaTeX conversion ─────────────────────────────────────────────────────────
+// ─── CONVERSIÓN A LATEX ────────────────────────────────────────────────────────
 export function toLatex(s: string): string {
   return s
     .replace(/\bsqrt\(([^)]+)\)/g, '\\sqrt{$1}')
@@ -60,7 +60,7 @@ export function toLatex(s: string): string {
     .replace(/\|x\|/g, '|x|');
 }
 
-// Pretty fraction
+// ─── FUNCIONES DESCARTADAS DE FORMATEO (FRACCIONES Y COEFICIENTES) ─────────────
 // function frac(num: number, den: number): string {
 //   if (den === 1) return String(num);
 //   if (num < 0 && den < 0) return `${-num}/${-den}`;
@@ -74,7 +74,8 @@ export function toLatex(s: string): string {
 //   return c.toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '*';
 // }
 
-// ─── Safe numeric evaluator ──────────────────────────────────────────────────
+// ─── EVALUADOR NUMÉRICO SEGURO ───────────────────────────────────────────────
+// Convierte sintaxis matemática a Javascript puro para evaluación segura (útil para gráficas).
 function safeEval(expr: string, xVal: number): number {
   const s = expr
     .replace(/\bx\b/g, `(${xVal})`)
@@ -102,7 +103,7 @@ function safeEval(expr: string, xVal: number): number {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//  INTEGRATION RULES — ordered from most specific to most general
+//  REGLAS DE INTEGRACIÓN — ordenadas desde la más específica a la más general
 // ═══════════════════════════════════════════════════════════════════════════════
 
 interface IntegrationResult {
@@ -117,7 +118,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
   const s = raw.trim();
   if (!s) return null;
 
-  // ── 0. Pure constant ────────────────────────────────────────────────────────
+  // ── 0. Constante pura ───────────────────────────────────────────────────────
   if (/^-?[\d.]+$/.test(s)) {
     return {
       antiderivative: `${s}*x`,
@@ -127,7 +128,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 1. Just x ──────────────────────────────────────────────────────────────
+  // ── 1. Solamente 'x' ────────────────────────────────────────────────────────
   if (s === 'x') {
     return {
       antiderivative: '(1/2)*x^2',
@@ -137,7 +138,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 2. a*x (linear) ────────────────────────────────────────────────────────
+  // ── 2. Función lineal simple: a*x ───────────────────────────────────────────
   const linM = s.match(/^(-?[\d.]+)\*?x$/);
   if (linM) {
     const a = Number(linM[1]);
@@ -150,7 +151,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 3. x^n  or  a*x^n (POWER RULE) ─────────────────────────────────────────
+  // ── 3. REGLA DE LA POTENCIA: x^n o a*x^n ────────────────────────────────────
   const powM = s.match(/^(-?[\d.]*)\*?x\^(-?[\d.]+)$/);
   if (powM) {
     const aRaw = powM[1]; const nRaw = powM[2];
@@ -177,7 +178,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 4. 1/x ─────────────────────────────────────────────────────────────────
+  // ── 4. Inversa: 1/x ─────────────────────────────────────────────────────────
   if (s === '1/x') {
     return {
       antiderivative: 'ln(abs(x))',
@@ -187,7 +188,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 5. BASIC TRIGONOMETRIC ──────────────────────────────────────────────────
+  // ── 5. TRIGONOMETRÍA BÁSICA ───────────────────────────────────────────────
   const trigBasic: Record<string, { ad: string; rule: string; exp: string; latex: string }> = {
     'sin(x)':    { ad: '-cos(x)',         rule: 'Integral de sin(x)',       exp: '∫sin(x)dx = -cos(x) + C.',          latex: '\\int \\sin x\\,dx = -\\cos x + C' },
     'cos(x)':    { ad: 'sin(x)',          rule: 'Integral de cos(x)',       exp: '∫cos(x)dx = sin(x) + C.',           latex: '\\int \\cos x\\,dx = \\sin x + C' },
@@ -206,7 +207,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     return { antiderivative: t.ad, rule: t.rule, explanation: t.exp, latexRule: t.latex };
   }
 
-  // ── 5b. a*trig(x) ──────────────────────────────────────────────────────────
+  // ── 5b. Constante por función trigonométrica: a*trig(x) ───────────────────
   const aTrigM = s.match(/^(-?[\d.]+)\*?(sin|cos|tan|sec|csc|cot)\(x\)$/);
   if (aTrigM) {
     const a = Number(aTrigM[1]);
@@ -223,7 +224,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     }
   }
 
-  // ── 6. EXPONENTIAL ─────────────────────────────────────────────────────────
+  // ── 6. FUNCIONES EXPONENCIALES ────────────────────────────────────────────
   if (s === 'exp(x)' || s === 'e^x') {
     return {
       antiderivative: 'exp(x)',
@@ -258,7 +259,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 7. LOGARITHMIC ─────────────────────────────────────────────────────────
+  // ── 7. FUNCIONES LOGARÍTMICAS ─────────────────────────────────────────────
   if (s === 'ln(x)') {
     return {
       antiderivative: 'x*ln(x)-x',
@@ -269,7 +270,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 8. TRIGONOMETRIC IDENTITIES ────────────────────────────────────────────
+  // ── 8. IDENTIDADES TRIGONOMÉTRICAS ────────────────────────────────────────
   if (s === 'sin(x)^2') {
     return {
       antiderivative: '(1/2)*x-(1/4)*sin(2*x)',
@@ -310,7 +311,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 9. LINEAR COMPOSITION: trig(ax+b) ─────────────────────────────────────
+  // ── 9. COMPOSICIÓN LINEAL: trig(ax+b) ─────────────────────────────────────
   // sin(ax), cos(ax), sin(ax+b), cos(ax+b)
   const trigLinM = s.match(/^(sin|cos|tan)\((-?[\d.]+)\*?x([+-][\d.]+)?\)$/);
   if (trigLinM) {
@@ -330,7 +331,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 10. LINEAR COMPOSITION: (ax+b)^n ───────────────────────────────────────
+  // ── 10. COMPOSICIÓN LINEAL: (ax+b)^n ──────────────────────────────────────
   const polyLinM = s.match(/^\((-?[\d.]+)\*?x([+-][\d.]+)?\)\^(-?[\d.]+)$/);
   if (polyLinM) {
     const a = Number(polyLinM[1]);
@@ -358,7 +359,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 11. SPECIAL FORMS ──────────────────────────────────────────────────────
+  // ── 11. FORMAS ESPECIALES ──────────────────────────────────────────────────
 
   // 1/(1+x^2) → arctan(x)
   if (s === '1/(1+x^2)' || s === '1/(x^2+1)') {
@@ -395,7 +396,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 12. INTEGRATION BY PARTS PATTERNS ──────────────────────────────────────
+  // ── 12. PATRONES DE INTEGRACIÓN POR PARTES ──────────────────────────────────
 
   // x*exp(x)
   if (s === 'x*exp(x)' || s === 'x*e^x') {
@@ -452,7 +453,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 13. SPECIAL: sqrt(x) ───────────────────────────────────────────────────
+  // ── 13. ESPECIAL: Raíz Cuadrada (sqrt) ───────────────────────────────────────
   if (s === 'sqrt(x)') {
     return {
       antiderivative: '(2/3)*x^1.5',
@@ -462,7 +463,7 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 14. a*sqrt(x) ─────────────────────────────────────────────────────────
+  // ── 14. Constante por raíz: a*sqrt(x) ─────────────────────────────────────
   const aSqrtM = s.match(/^(-?[\d.]+)\*?sqrt\(x\)$/);
   if (aSqrtM) {
     const a = Number(aSqrtM[1]);
@@ -475,14 +476,14 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // ── 15. 1/x^n = x^(-n) ────────────────────────────────────────────────────
+  // ── 15. Potencia Inversa: 1/x^n = x^(-n) ──────────────────────────────────
   const invPowM = s.match(/^1\/x\^([\d.]+)$/);
   if (invPowM) {
     const n = Number(invPowM[1]);
     return tryIntegrate(`x^${-n}`);
   }
 
-  // ── 16. a/x ────────────────────────────────────────────────────────────────
+  // ── 16. Constante entre x: a/x ──────────────────────────────────────────────
   const aOverXm = s.match(/^(-?[\d.]+)\/x$/);
   if (aOverXm) {
     const a = Number(aOverXm[1]);
@@ -494,11 +495,12 @@ function tryIntegrate(raw: string): IntegrationResult | null {
     };
   }
 
-  // Not matched
+  // Sin coincidencia (No soportado)
   return null;
 }
 
-// ─── Split expression into additive terms ────────────────────────────────────
+// ─── SEPARADOR DE TÉRMINOS ───────────────────────────────────────────────────
+// Divide la expresión matemática en términos individuales sumados o restados para integrarlos uno por uno.
 function splitTerms(expr: string): string[] {
   const s = expr.replace(/\s+/g, '');
   const terms: string[] = [];
@@ -521,7 +523,8 @@ function splitTerms(expr: string): string[] {
   return terms.filter(Boolean);
 }
 
-// ─── Plot generation ─────────────────────────────────────────────────────────
+// ─── GENERADOR DE GRÁFICAS ───────────────────────────────────────────────────
+// Crea los puntos (x, y) requeridos por la librería gráfica (Recharts) evaluando las funciones crudas.
 export function generatePlot(expr: string, antideriv: string, aStr?: string, bStr?: string): PlotPoint[] {
   const pts: PlotPoint[] = [];
   const a = aStr ? safeEval(aStr, 0) : null;
@@ -566,7 +569,7 @@ export function generatePlot(expr: string, antideriv: string, aStr?: string, bSt
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-//  MAIN SOLVER
+//  MOTOR DE RESOLUCIÓN PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function simplifyLocal(expr: string): string {
@@ -600,7 +603,7 @@ export function solveIntegral(rawExpr: string, aStr?: string, bStr?: string): So
     const bVal = bStr ? safeEval(bStr, 0) : null;
     const isDefinite = aVal !== null && bVal !== null && !isNaN(aVal) && !isNaN(bVal);
 
-    // ── Try as a single whole expression first (for complex patterns) ──
+    // ── Intentar como una sola expresión completa primero (para patrones complejos) ──
     const wholeResult = tryIntegrate(expr);
     if (wholeResult) {
       const steps: MathStep[] = [
@@ -657,7 +660,7 @@ export function solveIntegral(rawExpr: string, aStr?: string, bStr?: string): So
       };
     }
 
-    // ── Split into additive terms ──
+    // ── Dividir en términos sumativos ──
     const terms = splitTerms(expr);
     if (terms.length === 0) return { success: false, error: 'No se encontraron términos para integrar.' };
 
@@ -685,14 +688,14 @@ Tipos soportados:
       results.push(r);
     }
 
-    // Build full antiderivative
+    // Construir la antiderivada completa
     const fullAntideriv = results.map(r => r.antiderivative).join('+');
 
     let solLatex = toLatex(fullAntideriv).replace(/\+\-/g, '-');
     let defValue: number | undefined = undefined;
     let defLatex: string | undefined = undefined;
 
-    // Build steps
+    // Construir los pasos de resolución
     const steps: MathStep[] = [];
     steps.push({
       id: 0,
