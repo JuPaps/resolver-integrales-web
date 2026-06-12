@@ -4,6 +4,7 @@ import { type SolveResult, generatePlot } from './mathEngine';
 // Instrucciones estrictas para la Red Neuronal Avanzada.
 // Se le pide devolver exclusivamente un formato JSON válido con la solución, 
 // pasos matemáticos y representaciones compatibles para Javascript (para las gráficas).
+const SYSTEM_PROMPT = `Eres el motor de cálculo matemático de "MathSolver". El usuario te enviará una integral o expresión matemática para resolver.
 Debes resolverla paso a paso utilizando métodos de cálculo universitario (sustitución, por partes, fracciones parciales, trigonométricas, etc.).
 Debes devolver ÚNICAMENTE un objeto JSON válido (sin formato markdown adicional ni bloques de código de texto plano, SOLO el JSON parseable).
 El JSON debe cumplir con esta estructura estricta:
