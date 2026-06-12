@@ -53,6 +53,7 @@ export interface AIConfig {
 // ─── FUNCIÓN PRINCIPAL DE RESOLUCIÓN CON IA ───────────────────────────────────
 // Toma la expresión matemática del usuario y los límites (si es definida),
 // se comunica con la API de la Red Neuronal, y formatea la respuesta.
+export async function solveIntegralWithAI(expr: string, config: AIConfig, aStr?: string, bStr?: string): Promise<SolveResult> {
   if (!config.apiKey) {
     return { success: false, error: 'No se configuró una API Key.' };
   }
